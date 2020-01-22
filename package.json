@@ -17,7 +17,7 @@
   "author": "Tyler Schroeder <tyler@tylerschroeder.com>",
   "repository": {
     "type": "git",
-    "url": "github.com/tyschroed/parse-dimension"
+    "url": "git@github.com:tyschroed/parse-dimension.git"
   },
   "license": "MIT",
   "engines": {
