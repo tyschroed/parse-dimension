@@ -1,12 +1,12 @@
 export type ValueWithUnits = {
   value: number
-  units: AvailableUnits | null
+  units: Units | null
 }
 
-export enum AvailableUnits {
+export enum Units {
   in = 'in',
   ft = 'ft',
-  mm = 'mm', //important that MM listed before m, so that greedy regex parsing doesn't pick up a 'mm' value as a 'm'
+  mm = 'mm', // important that MM listed before m, so that greedy regex parsing doesn't pick up a 'mm' value as a 'm'
   m = 'm',
   cm = 'cm'
 }

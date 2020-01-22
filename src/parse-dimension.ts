@@ -1,29 +1,23 @@
 import convertUnits from 'convert-units'
-import { ValueWithUnits, AvailableUnits } from './types'
-
-console.log('convert units', convertUnits)
+import { ValueWithUnits, Units } from './types'
 
 const INCHES_EQUIVALENTS = ['"', '“', '”']
 const FEET_EQUIVALENTS = ["'", '‘', '’']
 
-const mapRawUnit = (rawUnit: string): AvailableUnits => {
-  const maybeUnit: AvailableUnits | undefined = (<any>AvailableUnits)[rawUnit]
+const mapRawUnit = (rawUnit: string): Units => {
+  const maybeUnit: Units | undefined = (Units as any)[rawUnit]
   if (maybeUnit !== undefined) {
     return maybeUnit
   }
   if (INCHES_EQUIVALENTS.includes(rawUnit)) {
-    return AvailableUnits.in
+    return Units.in
   } else if (FEET_EQUIVALENTS.includes(rawUnit)) {
-    return AvailableUnits.ft
+    return Units.ft
   } else {
     throw new Error(`Unknown unit ${rawUnit}`)
   }
 }
-let unitOptions: string[] = [
-  ...Object.values(AvailableUnits),
-  ...INCHES_EQUIVALENTS,
-  ...FEET_EQUIVALENTS
-]
+let unitOptions: string[] = [...Object.values(Units), ...INCHES_EQUIVALENTS, ...FEET_EQUIVALENTS]
 
 const dimensionRegex = new RegExp(`([0-9./]+)(${unitOptions.join('|')})`, 'i')
 
@@ -43,12 +37,12 @@ const convertFractionToDecimal = (value: string) => {
   return convertedNumerator / convertedDenominator
 }
 
-export default (
+const ParseDimension = (
   dimensionValue: string,
   {
-    defaultUnits = AvailableUnits.in,
-    outputUnits = AvailableUnits.in
-  }: { defaultUnits?: AvailableUnits; outputUnits?: AvailableUnits } = {}
+    defaultUnits = Units.in,
+    outputUnits = Units.in
+  }: { defaultUnits?: Units; outputUnits?: Units } = {}
 ) => {
   const dimensionComponents = dimensionValue
     .split(dimensionRegex)
@@ -80,7 +74,7 @@ export default (
         acc.push({ value: parseFloat(p), units: null })
       }
       return acc
-    }, <ValueWithUnits[]>[])
+    }, [] as ValueWithUnits[])
 
   return dimensionComponents.reduce(
     (total, { value, units }) =>
@@ -91,3 +85,6 @@ export default (
     0
   )
 }
+
+export { Units }
+export default ParseDimension
