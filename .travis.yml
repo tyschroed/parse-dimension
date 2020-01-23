@@ -1,3 +1,4 @@
+os: linux
 language: node_js
 cache:
   directories:
@@ -5,15 +6,26 @@ cache:
 notifications:
   email: false
 node_js:
-  - '10'
   - '11'
+  - '10'
   - '8'
-script:
-  - npm run test:prod && npm run build
-after_success:
-  - npm run travis-deploy-once "npm run report-coverage"
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run travis-deploy-once "npm run deploy-docs"; fi
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run travis-deploy-once "npm run semantic-release"; fi
+
+jobs:
+  include:
+    - stage: test
+      name: 'Unit tests'
+      script: npm run test:prod
+    - script: npm run lint
+      name: 'Linting'
+    - script: npm run build
+      name: 'Build'
+    - stage: release
+      node_js: lts/*
+      if: branch = master
+      deploy:
+        provider: script
+        cleanup: false
+        script: npm run semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
