@@ -1,6 +1,6 @@
 {
   "name": "parse-dimension",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Parse string length dimensions into their numeric units",
   "keywords": [
     "units",
