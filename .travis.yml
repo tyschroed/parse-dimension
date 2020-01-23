@@ -2,18 +2,13 @@ language: node_js
 
 node_js:
   - lts/*
-  - 11
-  - 10
-  - 8
 script: npm run test:prod && npm run build
-jobs:
-  include:
-    # Define the release stage that runs semantic-release
-    - stage: release
-      node_js: lts/*
-      # Advanced: optionally overwrite your default `script` step to skip the tests
-      script: npm run build
-      deploy:
-        provider: script
-        cleanup: false
-        script: npm run semantic-release
+notifications:
+  email: false
+node_js:
+- '10'
+before_script:
+- git version
+after_success:
+- npm run report-coverage
+- npm run semantic-release
