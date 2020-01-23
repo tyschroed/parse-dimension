@@ -2,7 +2,7 @@ import { units, parseDimension } from '../src/parse-dimension'
 import convertUnits from 'convert-units'
 
 test('parse feet to inches', () => {
-  const result = parseDimension("1'")
+  const result = parseDimension(`1'`)
   expect(result).toBe(12)
 })
 
