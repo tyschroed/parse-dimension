@@ -20,18 +20,20 @@ npm install parse-dimension
 ### Usage
 
 ```javascript
-import { ParseDimension, Units } from 'parse-dimension'
+import { parseDimension, units } from 'parse-dimension'
 
-ParseDimension(`3ft`)
+parseDimension(`3ft`)
 // -> 36
 
-ParseDimension(`1' 6"`)
+parseDimension(`1' 6"`)
 // -> 18
 
-ParseDimension(`24"`, { outputUnits: Units.ft })
+// specify units output value should be in
+parseDimension(`24"`, { outputUnits: units.ft })
 // -> 2
 
-ParseDimension(`2`, { defaultUnits: Units.ft })
+// specify the assumed units if none are provided
+parseDimension(`2`, { defaultUnits: units.ft })
 // -> 24
 ```
 
@@ -41,13 +43,13 @@ The second parameter is an optional options object, with the following propertie
 
 | Option       | Default  | Description                                          |
 | ------------ | -------- | ---------------------------------------------------- |
-| defaultUnits | Units.in | If no units provided, parser will assume these units |
-| outputUnits  | Units.in | Dimensions that output will be converted to          |
+| defaultUnits | units.in | If no units provided, parser will assume these units |
+| outputUnits  | units.in | Dimensions that output will be converted to          |
 
 For both options, valid values are one of:
 
 ```typescript
-export enum Units {
+export enum units {
   in = 'in',
   ft = 'ft',
   mm = 'mm',

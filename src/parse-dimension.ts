@@ -1,23 +1,34 @@
 import convertUnits from 'convert-units'
-import { ValueWithUnits, Units } from './types'
 
+type valueWithUnits = {
+  value: number
+  units: units | null
+}
+
+export enum units {
+  in = 'in',
+  ft = 'ft',
+  mm = 'mm', // important that MM listed before m, so that greedy regex parsing doesn't pick up a 'mm' value as a 'm'
+  m = 'm',
+  cm = 'cm'
+}
 const INCH_EQUIVALENTS = ['"', '“', '”', 'inches']
 const FEET_EQUIVALENTS = ["'", '‘', '’', 'feet']
+const unitOptions: string[] = [...Object.values(units), ...INCH_EQUIVALENTS, ...FEET_EQUIVALENTS]
 
-const mapRawUnit = (rawUnit: string): Units => {
-  const maybeUnit: Units | undefined = (Units as any)[rawUnit]
+const mapRawUnit = (rawUnit: string): units => {
+  const maybeUnit: units | undefined = (units as any)[rawUnit]
   if (maybeUnit !== undefined) {
     return maybeUnit
   }
   if (INCH_EQUIVALENTS.includes(rawUnit)) {
-    return Units.in
+    return units.in
   } else if (FEET_EQUIVALENTS.includes(rawUnit)) {
-    return Units.ft
+    return units.ft
   } else {
     throw new Error(`Unknown unit ${rawUnit}`)
   }
 }
-let unitOptions: string[] = [...Object.values(Units), ...INCH_EQUIVALENTS, ...FEET_EQUIVALENTS]
 
 const dimensionRegex = new RegExp(`([0-9./]+)(${unitOptions.join('|')})`, 'i')
 
@@ -44,12 +55,12 @@ const convertFractionToDecimal = (value: string) => {
  * @param options.defaultUnits Assumed units if none are specified on a string, default "in"
  * @param options.outputUnits Units output will be converted to. Default "in"
  */
-const ParseDimension = (
+export const parseDimension = (
   dimensionValue: string,
   {
-    defaultUnits = Units.in,
-    outputUnits = Units.in
-  }: { defaultUnits?: Units; outputUnits?: Units } = {}
+    defaultUnits = units.in,
+    outputUnits = units.in
+  }: { defaultUnits?: units; outputUnits?: units } = {}
 ) => {
   const dimensionComponents = dimensionValue
     .split(dimensionRegex)
@@ -83,7 +94,7 @@ const ParseDimension = (
         acc.push({ value: parseFloat(p), units: null })
       }
       return acc
-    }, [] as ValueWithUnits[])
+    }, [] as valueWithUnits[])
 
   return dimensionComponents.reduce(
     (total, { value, units }) =>
@@ -94,5 +105,3 @@ const ParseDimension = (
     0
   )
 }
-
-export { Units, ParseDimension }
