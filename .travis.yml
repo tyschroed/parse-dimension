@@ -1,31 +1,19 @@
-os: linux
 language: node_js
-cache:
-  directories:
-    - ~/.npm
-notifications:
-  email: false
-node_js:
-  - '11'
-  - '10'
-  - '8'
 
+node_js:
+  - lts/*
+  - 11
+  - 10
+  - 8
+script: npm run test:prod && npm run build
 jobs:
   include:
-    - stage: test
-      name: 'Unit tests'
-      script: npm run test:prod
-    - script: npm run lint
-      name: 'Linting'
-    - script: npm run build
-      name: 'Build'
+    # Define the release stage that runs semantic-release
     - stage: release
       node_js: lts/*
-      if: branch = master
+      # Advanced: optionally overwrite your default `script` step to skip the tests
+      script: npm run build
       deploy:
         provider: script
         cleanup: false
         script: npm run semantic-release
-branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
