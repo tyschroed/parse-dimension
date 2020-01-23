@@ -2,6 +2,8 @@
 
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Travis](https://img.shields.io/travis/tyschroed/parse-dimension)](https://travis-ci.org/tyschroed/parse-dimension)
+[![Coverage Status](https://coveralls.io/repos/github/tyschroed/parse-dimension/badge.svg?branch=master)](https://coveralls.io/github/tyschroed/parse-dimension?branch=master)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## What is this?
 
