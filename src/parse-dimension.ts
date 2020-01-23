@@ -1,15 +1,15 @@
 import convertUnits from 'convert-units'
 import { ValueWithUnits, Units } from './types'
 
-const INCHES_EQUIVALENTS = ['"', '“', '”']
-const FEET_EQUIVALENTS = ["'", '‘', '’']
+const INCH_EQUIVALENTS = ['"', '“', '”', 'inches']
+const FEET_EQUIVALENTS = ["'", '‘', '’', 'feet']
 
 const mapRawUnit = (rawUnit: string): Units => {
   const maybeUnit: Units | undefined = (Units as any)[rawUnit]
   if (maybeUnit !== undefined) {
     return maybeUnit
   }
-  if (INCHES_EQUIVALENTS.includes(rawUnit)) {
+  if (INCH_EQUIVALENTS.includes(rawUnit)) {
     return Units.in
   } else if (FEET_EQUIVALENTS.includes(rawUnit)) {
     return Units.ft
@@ -17,7 +17,7 @@ const mapRawUnit = (rawUnit: string): Units => {
     throw new Error(`Unknown unit ${rawUnit}`)
   }
 }
-let unitOptions: string[] = [...Object.values(Units), ...INCHES_EQUIVALENTS, ...FEET_EQUIVALENTS]
+let unitOptions: string[] = [...Object.values(Units), ...INCH_EQUIVALENTS, ...FEET_EQUIVALENTS]
 
 const dimensionRegex = new RegExp(`([0-9./]+)(${unitOptions.join('|')})`, 'i')
 
@@ -37,6 +37,13 @@ const convertFractionToDecimal = (value: string) => {
   return convertedNumerator / convertedDenominator
 }
 
+/**
+ *
+ * @param dimensionValue string value to parse. For example, 1cm, 1 1/2", 1m, 2ft 6in
+ * @param options Options determining how value will be parsed
+ * @param options.defaultUnits Assumed units if none are specified on a string, default "in"
+ * @param options.outputUnits Units output will be converted to. Default "in"
+ */
 const ParseDimension = (
   dimensionValue: string,
   {
@@ -68,6 +75,8 @@ const ParseDimension = (
             } else {
               lastValue.units = mappedUnit
             }
+          } else {
+            throw new Error(`Units of ${mappedUnit} were provided with no value!`)
           }
         }
       } else {
@@ -86,5 +95,4 @@ const ParseDimension = (
   )
 }
 
-export { Units }
-export default ParseDimension
+export { Units, ParseDimension }
